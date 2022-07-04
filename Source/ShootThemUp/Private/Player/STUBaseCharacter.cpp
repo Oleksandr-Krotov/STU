@@ -52,17 +52,18 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
 	check(WeaponComponent);
+	check(GetMesh());
 	
+	PlayerInputComponent->BindAxis("TurnAround", this, &ASTUBaseCharacter::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &ASTUBaseCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASTUBaseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASTUBaseCharacter::MoveRight);
-	PlayerInputComponent->BindAxis("LookUp", this, &ASTUBaseCharacter::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("TurnAround", this, &ASTUBaseCharacter::AddControllerYawInput);
+
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASTUBaseCharacter::Jump);
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ASTUBaseCharacter::RunStart);
@@ -120,7 +121,7 @@ void ASTUBaseCharacter::OnDeath()
 {
 	UE_LOG(LogBaseCharacter, Display, TEXT("Player %s is dead"), *GetName())
 
-	PlayAnimMontage(DeathAnimMontage);
+	//PlayAnimMontage(DeathAnimMontage);
 	GetCharacterMovement()->DisableMovement();
 
 	SetLifeSpan(LifeSpanOnDeath);
@@ -130,6 +131,9 @@ void ASTUBaseCharacter::OnDeath()
 	}
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	WeaponComponent->StopFire();
+
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetMesh()->SetSimulatePhysics(true);
 }
 
 void ASTUBaseCharacter::OnHealthChanged(float Health)
