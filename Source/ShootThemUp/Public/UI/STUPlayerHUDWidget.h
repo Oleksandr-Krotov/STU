@@ -15,7 +15,7 @@ class SHOOTTHEMUP_API USTUPlayerHUDWidget : public UUserWidget
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	float GetHealthPercent() const;
-	
+
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
 
@@ -26,4 +26,12 @@ public:
 	bool IsPlayerAlive() const;
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	bool IsPlayerSpectating() const;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI")
+	void OnTakeDamage();
+
+	virtual bool Initialize() override;
+
+private:
+	void OnHealthChanged(float Health, float HealthDelta);
 };

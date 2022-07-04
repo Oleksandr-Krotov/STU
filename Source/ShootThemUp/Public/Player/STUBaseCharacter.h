@@ -76,7 +76,7 @@ private:
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
 	void OnDeath();
-	void OnHealthChanged(float Health);
+	void OnHealthChanged(float Health, float HealthDelta);
 
 
 	UFUNCTION()
