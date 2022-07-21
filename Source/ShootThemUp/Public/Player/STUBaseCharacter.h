@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "STUBaseWeapon.h"
 #include "Camera/CameraComponent.h"
-#include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"

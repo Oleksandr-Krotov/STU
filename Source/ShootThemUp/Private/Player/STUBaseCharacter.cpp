@@ -1,11 +1,11 @@
 // Shoot Them Up Game. All rights reserved.
 
 #include "Player/STUBaseCharacter.h"
-#include "STUCharacterMovementComponent.h"
+#include "Components/STUCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/STUWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
-
+#include "Components/STUHealthComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
