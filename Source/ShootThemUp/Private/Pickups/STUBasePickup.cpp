@@ -1,8 +1,6 @@
 // Shoot Them Up Game. All rights reserved.
 
 #include "Pickups/STUBasePickup.h"
-
-#include "Animation/AnimInstanceProxy.h"
 #include "Components/SphereComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBasePickup, All, All);
@@ -54,8 +52,6 @@ void ASTUBasePickup::PickupWasTaken()
 	{
 		GetRootComponent()->SetVisibility(false, true);
 	}
-	FTimerHandle RespawnTimerHandle;
-
 	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASTUBasePickup::Respawn, RespawnTime);
 }
 
@@ -76,3 +72,7 @@ void ASTUBasePickup::GenerateRotationYaw()
 	RotationYaw = FMath::RandRange(1.0f, 2.0f) * Direction;
 }
 
+bool ASTUBasePickup::CouldBeTaken() const
+{
+	return !GetWorldTimerManager().IsTimerActive(RespawnTimerHandle);
+}

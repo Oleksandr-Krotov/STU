@@ -30,6 +30,7 @@ public:
 	FAmmoData GetAmmoData() const {return  CurrentAmmo; }
 	bool TryToAddAmmo(int32 ClipAmount);
 	bool IsAmmoEmpty() const;
+	bool IsAmmoFull() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -62,7 +63,6 @@ protected:
 
 	void DecreaseAmmo();
 	bool IsClipEmpty() const;
-	bool IsAmmoFull() const;
 	void LogAmmo();
 
 	UNiagaraComponent* SpawnMuzzleFX();
