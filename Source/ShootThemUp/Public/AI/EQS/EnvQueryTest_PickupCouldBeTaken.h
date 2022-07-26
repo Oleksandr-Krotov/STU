@@ -15,5 +15,4 @@ public:
 	UEnvQueryTest_PickupCouldBeTaken(const FObjectInitializer& ObjectInitializer);
 
 	virtual void RunTest(FEnvQueryInstance& QueryInstance) const override;
-	
 };
