@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "STUBaseWeapon.h"
+#include "STUPlayerState.h"
 #include "Camera/CameraComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Character.h"
@@ -52,6 +53,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
+	
+	UPROPERTY(EditDefaultsOnly, Category= "Material")
+	FName MaterialColorName = "Paint Color";
 
 	virtual void BeginPlay() override;
 	virtual void OnDeath();
@@ -66,7 +70,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void RunStart();
 	void RunReleased();
-
+	void SetPlayerColor(const FLinearColor& Color);
 
 private:
 	bool IsRunDown = false;
