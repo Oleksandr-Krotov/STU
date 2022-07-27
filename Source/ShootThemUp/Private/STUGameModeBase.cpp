@@ -8,6 +8,7 @@
 #include "STUUtils.h"
 #include "Components/STURespawnComponent.h"
 #include "UI/STUGameHUD.h"
+#include "EngineUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
 
@@ -66,7 +67,7 @@ void ASTUGameModeBase::GameTimerUpdate()
 {
 	UE_LOG(LogSTUGameModeBase, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
 
-	
+
 	if (--RoundCountDown == 0)
 	{
 		GetWorldTimerManager().ClearTimer(GameRoundTimerHandle);
@@ -78,8 +79,7 @@ void ASTUGameModeBase::GameTimerUpdate()
 		}
 		else
 		{
-			UE_LOG(LogSTUGameModeBase, Display, TEXT("========== Game OVER =========="))
-			LogPlayerInfo();
+			GameOver();
 		}
 	}
 }
@@ -126,16 +126,16 @@ void ASTUGameModeBase::CreateTeamsInfo()
 
 FLinearColor ASTUGameModeBase::DetermineColorByTeamID(int32 TeamID) const
 {
-	const auto ArrayIndex = TeamID -1;
-	 if (ArrayIndex < GameData.TeamColors.Num())
-	 {
-		 return GameData.TeamColors[ArrayIndex];
-	 }
+	const auto ArrayIndex = TeamID - 1;
+	if (ArrayIndex < GameData.TeamColors.Num())
+	{
+		return GameData.TeamColors[ArrayIndex];
+	}
 	UE_LOG(LogSTUGameModeBase, Warning,
-		TEXT("No color for team id: %i, set to default: %s"),
-		TeamID, *GameData.DefaultTeamColor.ToString());
+	       TEXT("No color for team id: %i, set to default: %s"),
+	       TeamID, *GameData.DefaultTeamColor.ToString());
 
-	return  GameData.DefaultTeamColor;
+	return GameData.DefaultTeamColor;
 }
 
 void ASTUGameModeBase::SetPlayerColor(AController* Controller)
@@ -160,7 +160,7 @@ void ASTUGameModeBase::Killed(AController* KillerController, AController* Victim
 	{
 		KillerPlayerState->AddKill();
 	}
-	
+
 	if (VictimPlayerState)
 	{
 		VictimPlayerState->AddDeath();
@@ -172,7 +172,7 @@ void ASTUGameModeBase::Killed(AController* KillerController, AController* Victim
 void ASTUGameModeBase::LogPlayerInfo()
 {
 	if (!GetWorld()) return;
-	
+
 	for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
 	{
 		const auto Controller = It->Get();
@@ -190,7 +190,7 @@ void ASTUGameModeBase::StartRespawn(AController* Controller)
 	const auto RespawnAvailable = RoundCountDown > MinRoundTimeToRespawn + GameData.RespawnTime;
 
 	if (!RespawnAvailable) return;
-	
+
 	const auto RespawnComponent = STUUtils::GetSTUPlayerComponent<USTURespawnComponent>(Controller);
 	if (!RespawnComponent) return;
 
@@ -202,4 +202,17 @@ void ASTUGameModeBase::RespawnRequest(AController* Controller)
 	ResetOnePlayer(Controller);
 }
 
+void ASTUGameModeBase::GameOver()
+{
+	UE_LOG(LogSTUGameModeBase, Display, TEXT("========== Game OVER =========="))
+	LogPlayerInfo();
 
+	for(auto Pawn: TActorRange<APawn>(GetWorld() ))
+	{
+		if (Pawn)
+		{
+			Pawn->TurnOff();
+			Pawn->DisableInput(nullptr);
+		}
+	}
+}
