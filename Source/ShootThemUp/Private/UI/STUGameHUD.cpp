@@ -16,10 +16,18 @@ void ASTUGameHUD::DrawHUD()
 void ASTUGameHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	auto PlayerHudWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass);
-	if (PlayerHudWidget)
+	
+	GameWidgets.Add(ESTUMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass));
+	GameWidgets.Add(ESTUMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+
+	for (auto GameWidgetPair : GameWidgets)
 	{
-		PlayerHudWidget->AddToViewport();
+		const auto GameWidget = GameWidgetPair.Value;
+
+		if (!GameWidget) continue;
+
+		GameWidget->AddToViewport();
+		GameWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 	if (GetWorld())
@@ -35,18 +43,32 @@ void ASTUGameHUD::BeginPlay()
 
 void ASTUGameHUD::OnMatchStateChanged(ESTUMatchState State)
 {
-	UE_LOG(LogSTUGameHUD, Display, TEXT("Match state changed: %s"), *UEnum::GetValueAsString(State));	
+	if (CurrentWidget)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+	if (GameWidgets.Contains(State))
+	{
+		CurrentWidget = GameWidgets[State];
+	}
+
+	if (CurrentWidget)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	
+	UE_LOG(LogSTUGameHUD, Display, TEXT("Match state changed: %s"), *UEnum::GetValueAsString(State));
 }
 
 void ASTUGameHUD::DrawCrossHair()
 {
-	const TInterval<float>Center(Canvas->SizeX * 0.5f, Canvas->SizeY * 0.5f);
+	const TInterval<float> Center(Canvas->SizeX * 0.5f, Canvas->SizeY * 0.5f);
 
 	const float HalfLineSize = 10.0f;
 	const float LineThickness = 2.0f;
 	const FLinearColor LinearColor = FLinearColor::Green;
-	
-	DrawLine(Center.Min -HalfLineSize, Center.Max, Center.Min + HalfLineSize, Center.Max, LinearColor, LineThickness);
-	DrawLine(Center.Min, Center.Max -HalfLineSize, Center.Min, Center.Max + HalfLineSize, LinearColor, LineThickness);
-}
 
+	DrawLine(Center.Min - HalfLineSize, Center.Max, Center.Min + HalfLineSize, Center.Max, LinearColor, LineThickness);
+	DrawLine(Center.Min, Center.Max - HalfLineSize, Center.Min, Center.Max + HalfLineSize, LinearColor, LineThickness);
+}

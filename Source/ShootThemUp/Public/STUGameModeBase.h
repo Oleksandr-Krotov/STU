@@ -28,6 +28,9 @@ public:
 	FGameData GetGameData() const { return GameData; }
 	void RespawnRequest(AController* CastController);
 
+	virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate) override;
+	virtual bool ClearPause() override;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category= "Game")
 	TSubclassOf<AAIController> AIControllerClass;
