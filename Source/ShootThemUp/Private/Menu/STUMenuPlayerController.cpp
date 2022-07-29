@@ -1,7 +1,6 @@
 // Shoot Them Up Game. All rights reserved.
 
 #include "Menu/STUMenuPlayerController.h"
-#include "STUGameInstance.h"
 
 void ASTUMenuPlayerController::BeginPlay()
 {
@@ -9,6 +8,4 @@ void ASTUMenuPlayerController::BeginPlay()
 
 	SetInputMode(FInputModeUIOnly());
 	bShowMouseCursor = true;
-	
-	GetWorld()->GetGameInstance<USTUGameInstance>()->TestString = "Menu Level says Hello";
 }
