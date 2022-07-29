@@ -9,6 +9,7 @@
 #include "Components/STURespawnComponent.h"
 #include "UI/STUGameHUD.h"
 #include "EngineUtils.h"
+#include "STUGameInstance.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
 
@@ -26,7 +27,7 @@ void ASTUGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 
-	SpawnBots();
+gi	SpawnBots();
 	CreateTeamsInfo();
 
 	CurrentRound = 1;
