@@ -27,7 +27,7 @@ void ASTUGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 
-gi	SpawnBots();
+	SpawnBots();
 	CreateTeamsInfo();
 
 	CurrentRound = 1;
