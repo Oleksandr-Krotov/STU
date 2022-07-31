@@ -27,6 +27,8 @@ void USTUMenuWidget::NativeOnInitialized()
 	InitLevelItems();
 }
 
+
+
 void USTUMenuWidget::InitLevelItems()
 {
 	const auto STUGameInstance = GetSTUGameInstance();
@@ -79,9 +81,15 @@ void USTUMenuWidget::OnLevelSelected(const FLevelData& Data)
 
 void USTUMenuWidget::OnStartGame()
 {
-	const auto STUGameInstance = GetSTUGameInstance();
-	if (!STUGameInstance) return;
+	PlayAnimation(HideAnimation);
+}
 
+void USTUMenuWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
+{
+	if (Animation != HideAnimation) return;
+	
+	Super::OnAnimationFinished_Implementation(Animation);
+	const auto STUGameInstance = GetSTUGameInstance();
 	if (!STUGameInstance) return;
 
 	UGameplayStatics::OpenLevel(this, STUGameInstance->GetStartupLevel().LevelName);
